@@ -9,12 +9,6 @@
 
 Lors du passage à cert-manager, il est nécessaire de faire les actions suivantes:
 
-0. Effectuer un backup du manifest du secret contenant le précédent certificat pour pouvoir le restaurer en cas d'imprévu durant l'opération.
-
-    Exemple avec grafana-tls
-    ```bash
-    k get secret grafana-tls -n monitoring -o yaml > secret-grafana-tls.backup-test-prod.yaml
-    ```
 
 1. Supprimer l'externalSecret qui injecte le certificat (stocké dans le vault) dans le secret et qui est utilisé par l'application.
 Pour ce faire, il faut supprimer la ressource de l'externalSecret dans le helm chart de l'application.
