@@ -12,6 +12,10 @@ Voici la liste des prérequis nécessaires aux changements de node pool.
     prod : 188.165.71.190
 
 - Avoir accès aux repositories GitLab Terraform
+    - [pfc-ovh-terraform-sources](https://gitlab.pfccloudovh.proxy.prod.forge.esante.gouv.fr/ans/transverse/pfc-ovh/pfc-ovh-terraform-sources)
+    - [pfc-ovh-test](https://gitlab.pfccloudovh.proxy.prod.forge.esante.gouv.fr/ans/transverse/pfc-ovh/pfc-ovh-terraform-configs/pfc-ovh-test)
+    - [pfc-ovh-amont](https://gitlab.pfccloudovh.proxy.prod.forge.esante.gouv.fr/ans/transverse/pfc-ovh/pfc-ovh-terraform-configs/pfc-ovh-amont)
+    - [pfc-ovh-prod](https://gitlab.pfccloudovh.proxy.prod.forge.esante.gouv.fr/ans/transverse/pfc-ovh/pfc-ovh-terraform-configs/pfc-ovh-prod)
 - Avoir accès aux clusters Kubernetes
 - Pour les clusters `forge` uniquement : avoir les clés pour « unseal » le vault.
 
