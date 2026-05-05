@@ -1,4 +1,4 @@
-# Comment configurer une nouvelle application ou un nouvel environnement client sur la PFC
+# Comment configurer une nouvelle application ou un nouvel environnement client sur la PFC (version 1AZ)
 
 ## Contexte
 
