@@ -58,28 +58,8 @@ Pour chaque utilisateur, nous avons besoin de :
 
 ## Créer un ApplicationSet pour les applications avec les SecretStores
 
-- Créer un fichier `bootstrap-app-argocd.yaml` avec le contenu suivant (remplacer `<nom de l'app>` par le nom de l'application):
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: <nom de l'app>-scm
-  namespace: argo-cd
-spec:
-  destination:
-    namespace: default
-    server: https://kubernetes.default.svc
-  project: outils
-  source:
-    path: app/
-    repoURL: https://gitlab.esante.gouv.fr/ans/transverse/pfc-ovh/pfc-ovh-argocd-configs/gitops/applications-metiers/<nom de l'app>.git
-    targetRevision: main
-  syncPolicy:
-    automated:
-      enabled: true
-```
-- Faire un `kubectl apply -f bootstrap-app-argocd.yaml` pour créer l'Application dans ArgoCD.
-- Le fichier peut ensuite être supprimé.
+- Cloner le repo gitlab de l'application ArgoCD ([créé dans la section précédente](https://gitlab.esante.gouv.fr/ans/transverse/pfc-ovh/pfc-ovh-argocd-configs/gitops/applications-metiers/$APPNAME.git)) en local.
+- Faire un `kubectl apply -f app/app-$APPNAME-scm.yaml` pour créer l'Application dans ArgoCD.
 
 ## Donner les accès aux utilisateurs
 
@@ -92,11 +72,11 @@ La configuration des rôles et des permissions Keycloak pour pouvoir se connecte
         email: marie.blachere@exemple.fr
         generateInitialPassword: true
         groups:
-          - <nom de l'app>-[re7 | developer | devops]
+          - $APPNAME-[re7 | developer | devops]
 ```
 - Dans le fichier https://github.com/ansforge/pfc-ovh-argocd-config-infrastructure/blob/main/components/operationnel/keycloak-config/outils/values/groups.yaml, ajouter les rôles suivants:
 ```yaml
-     - name: <nom de l'app>-devops
+     - name: $APPNAME-devops
        realmRoles:
          - argocd-access
          - argocdcli-access
@@ -104,50 +84,50 @@ La configuration des rôles et des permissions Keycloak pour pouvoir se connecte
          - vault-access
        clientRoles:
          vault:
-           - <nom de l'app>-devops
-     - name: <nom de l'app>-developer
+           - $APPNAME-devops
+     - name: $APPNAME-developer
        realmRoles:
          - argocd-access
          - grafana-access
          - vault-access
        clientRoles:
          vault:
-           - <nom de l'app>-developer
-     - name: <nom de l'app>-re7
+           - $APPNAME-developer
+     - name: $APPNAME-re7
        realmRoles:
          - vault-access
        clientRoles:
          vault:
-           - <nom de l'app>-developer
+           - $APPNAME-developer
 ```
-- Dans le fichier https://github.com/ansforge/pfc-ovh-argocd-config-infrastructure/blob/main/components/operationnel/argo-cd/outils/values.yaml, ajouter une entrée de `appsetOptions / additioalValuesFiles` pour un nouveau fichier à créer selon le modèle des fichiers déjà présents, avec comme nom `<nom de l'app>.yaml`. Le contenu du fichier `<nom de l'app>.yaml` doit être le suivant (en adaptant les permissions selon les environnements de l'application) :
+- Dans le fichier https://github.com/ansforge/pfc-ovh-argocd-config-infrastructure/blob/main/components/operationnel/argo-cd/outils/values.yaml, ajouter une entrée de `appsetOptions / additioalValuesFiles` pour un nouveau fichier avec comme nom `$APPNAME.yaml`. Créer le fichier `components/operationnel/argo-cd/outils/values/$APPNAME.yaml` doit être le suivant (en adaptant les permissions selon les environnements de l'application) :
 ```yaml
 argo-cd:
   configs:
     rbac:
-      policy.<nom de l'app>.csv: |
+      policy.$APPNAME.csv: |
         # scm
-        p, proj:outils:<nom de l'app>-devops, applications, *, outils/<nom de l'app>-scm, allow
-        p, proj:outils:<nom de l'app>-devops, exec, create, outils/<nom de l'app>-scm, allow
+        p, proj:outils:$APPNAME-devops, applications, *, outils/$APPNAME-scm, allow
+        p, proj:outils:$APPNAME-devops, exec, create, outils/$APPNAME-scm, allow
 
         # dev
-        p, proj:amont:<nom de l'app>-developer, applications, *, amont/<nom de l'app>-dev, allow
-        p, proj:amont:<nom de l'app>-developer, exec, create, amont/<nom de l'app>-dev, allow
+        p, proj:amont:$APPNAME-developer, applications, *, amont/$APPNAME-dev, allow
+        p, proj:amont:$APPNAME-developer, exec, create, amont/$APPNAME-dev, allow
 
         # integ
-        p, proj:amont:<nom de l'app>-developer, applications, *, amont/<nom de l'app>-integ, allow
-        p, proj:amont:<nom de l'app>-developer, exec, create, amont/<nom de l'app>-integ, allow
+        p, proj:amont:$APPNAME-developer, applications, *, amont/$APPNAME-integ, allow
+        p, proj:amont:$APPNAME-developer, exec, create, amont/$APPNAME-integ, allow
 
         # prod
-        p, proj:production:<nom de l'app>-devops, applications, *, production/<nom de l'app>-prod, allow
-        p, proj:production:<nom de l'app>-devops, exec, create, production/<nom de l'app>-prod, allow
+        p, proj:production:$APPNAME-devops, applications, *, production/$APPNAME-prod, allow
+        p, proj:production:$APPNAME-devops, exec, create, production/$APPNAME-prod, allow
 
         # group mappings
-        g, <nom de l'app>-devops, proj:amont:<nom de l'app>-developer
-        g, <nom de l'app>-devops, proj:outils:<nom de l'app>-devops
-        g, <nom de l'app>-devops, proj:production:<nom de l'app>-devops
+        g, $APPNAME-devops, proj:amont:$APPNAME-developer
+        g, $APPNAME-devops, proj:outils:$APPNAME-devops
+        g, $APPNAME-devops, proj:production:$APPNAME-devops
 
-        g, <nom de l'app>-developer, proj:amont:<nom de l'app>-developer
+        g, $APPNAME-developer, proj:amont:$APPNAME-developer
 ```
 
 Une fois le compte créé, envoyer le mail suivant avec Christian en copie (ne pas oublier de remplacer toutes les valeurs `$`)
