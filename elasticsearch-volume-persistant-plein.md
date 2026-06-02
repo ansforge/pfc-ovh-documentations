@@ -57,7 +57,6 @@ resize2fs /dev/sdg
 df -Th /data
 ```
 
-- Vous devriez voir des logs qui ressemble à ça et voir que la taille du volume a bien été mise à jour.
 - Vous devriez voir des logs qui ressemblent à ceci et constater que la taille du volume a bien été mise à jour.
 
 ```log
