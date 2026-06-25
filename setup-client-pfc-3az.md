@@ -109,18 +109,22 @@ argo-cd:
         # scm
         p, proj:outils:$APPNAME-devops, applications, *, outils/$APPNAME-scm, allow
         p, proj:outils:$APPNAME-devops, exec, create, outils/$APPNAME-scm, allow
+        p, proj:outils:$APPNAME-devops, logs, get, outils/$APPNAME-scm, allow
 
         # dev
         p, proj:amont:$APPNAME-developer, applications, *, amont/$APPNAME-dev, allow
         p, proj:amont:$APPNAME-developer, exec, create, amont/$APPNAME-dev, allow
+        p, proj:amont:$APPNAME-developer, logs, get, amont/$APPNAME-dev, allow
 
         # integ
         p, proj:amont:$APPNAME-developer, applications, *, amont/$APPNAME-integ, allow
         p, proj:amont:$APPNAME-developer, exec, create, amont/$APPNAME-integ, allow
+        p, proj:amont:$APPNAME-developer, logs, get, amont/$APPNAME-integ, allow
 
         # prod
         p, proj:production:$APPNAME-devops, applications, *, production/$APPNAME-prod, allow
         p, proj:production:$APPNAME-devops, exec, create, production/$APPNAME-prod, allow
+        p, proj:production:$APPNAME-devops, logs, get, production/$APPNAME-prod, allow
 
         # group mappings
         g, $APPNAME-devops, proj:amont:$APPNAME-developer
