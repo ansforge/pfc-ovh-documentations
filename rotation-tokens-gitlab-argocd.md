@@ -12,9 +12,11 @@ Le scope des tokens leur permet de lire les repos gitlab sans aucun droit d'écr
 
 # Comment technique
 
-1. Pour chaque folder gitlab nécessaire ([gitops](https://gitlab.esante.gouv.fr/ans/transverse/pfc-ovh/pfc-ovh-argocd-configs/gitops) et [helmchart](https://gitlab.esante.gouv.fr/ans/deploiement/helmchart)), créer un nouveau *Group Access Token* gitlab:
+1. Pour chaque folder gitlab nécessaire ([helmchart](https://gitlab.esante.gouv.fr/ans/deploiement/helmchart), et [gitops](https://gitlab.esante.gouv.fr/ans/transverse/pfc-ovh/pfc-ovh-argocd-configs/gitops)/[gitops-test](https://gitlab.esante.gouv.fr/ans/transverse/pfc-ovh/pfc-ovh-argocd-configs/gitops-test) selon le cluster), il faut créer un nouveau *Group Access Token* gitlab:
    - Il faut le scope `read_api, read_repository, read_registry` 
    - Noter la date d'expiration
+
+   Attention ! Ces tokens ne peuvent être créés que par des administrateurs gitlab, par exemple Christian Crimetz.
 2. Changer le token dans les Vault (champs "token-folder-gitops"/"token-folder-helmchart"):
    - 3AZ: https://vault.pfccloud.esante.gouv.fr/ui/vault/secrets/outils-devops/kv/argocd-gitlab-credentials/details
    - 1AZ: https://vault.pfccloudovh.esante.gouv.fr/ui/vault/secrets/forge-tools/kv/argocd/details
