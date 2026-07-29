@@ -33,6 +33,7 @@ Pour pouvoir traiter les demandes efficacement, voici la liste des éléments do
 - Nom des environnements
 - Cluster de destination pour chaque environnement
 - Liste des utilisateurs
+- Est-ce une application métier ou éditeur
 
 Pour chaque utilisateur, nous avons besoin de :
 
@@ -44,21 +45,20 @@ Pour chaque utilisateur, nous avons besoin de :
 
 ## Créer les KV Vault et les ServiceAccounts
 
-- Dans le repository [terraform-ovh-platform-k8s](https://github.com/ansforge/terraform-ovh-platform-k8s/), dans les dossiers `layers/outils/vault/config-infra-transverse/3az-operationnel`/`<amont|production>`, ajouter un dossier avec le nom de l'application, et copier dans ce dossier le contenu d'un dossier d'une application déjà configurée (par exemple `mcps`).
+- Dans le repository [terraform-ovh-platform-k8s](https://github.com/ansforge/terraform-ovh-platform-k8s/), dans le dossier `layers/outils/vault/applications-3az`, ajouter un dossier avec le nom de l'application, et copier dans ce dossier le contenu d'un dossier d'une application déjà configurée (par exemple `mcps`).
 - Ajuster les paramètres dans les fichiers `inputs.hcl` (notamment les environnements de l'application) si besoin.
 - Faire un `terragrunt apply` pour créer les ressources dans Vault.
-- Une fois les changements effectués, ouvrir une PullRequest.
 
 ## Créer les repository GitLab
 
 - Dans le repository [terraform-ovh-platform-k8s](https://github.com/ansforge/terraform-ovh-platform-k8s/), dans le dossier `layers/outils/gitlab-3az`, ajouter un dossier avec le nom de l'application, et copier dans ce dossier le contenu d'un dossier d'une application déjà configurée (par exemple `mcps`).
-- Ajuster les paramètres dans les fichiers `inputs.hcl` (notamment les environnements de l'application) si besoin.
-- Faire un `terragrunt apply` pour créer les ressources dans Vault.
+- Ajuster les paramètres dans les fichiers `inputs.hcl` (notamment les environnements de l'application et la qualitifcation en app métier/éditeur) si besoin.
+- Faire un `terragrunt apply` pour bootstrap les repos dans GitLab.
 - Une fois les changements effectués, les mettre sur main (de préférence avec une PR).
 
 ## Créer un ApplicationSet pour les applications avec les SecretStores
 
-- Cloner le repo gitlab de l'application ArgoCD ([créé dans la section précédente](https://gitlab.esante.gouv.fr/ans/transverse/pfc-ovh/pfc-ovh-argocd-configs/gitops/applications-metiers/$APPNAME.git)) en local.
+- Cloner le repo gitlab de l'application ArgoCD ([créé dans la section précédente](https://gitlab.esante.gouv.fr/ans/transverse/pfc-ovh/pfc-ovh-argocd-configs/gitops/)) en local.
 - Faire un `kubectl apply -f app/app-$APPNAME-scm.yaml` pour créer l'Application dans ArgoCD.
 
 ## Donner les accès aux utilisateurs
@@ -100,6 +100,7 @@ La configuration des rôles et des permissions Keycloak pour pouvoir se connecte
          vault:
            - $APPNAME-developer
 ```
+- Dans le fichier https://github.com/ansforge/pfc-ovh-argocd-config-infrastructure/blob/main/components/operationnel/keycloak-config/outils/values/clients.yaml, ajouter `$APPNAME-devops` dans la liste des roles du client vault
 - Dans le fichier https://github.com/ansforge/pfc-ovh-argocd-config-infrastructure/blob/main/components/operationnel/argo-cd/outils/values.yaml, ajouter une entrée de `appsetOptions / additioalValuesFiles` pour un nouveau fichier avec comme nom `$APPNAME.yaml`. Créer le fichier `components/operationnel/argo-cd/outils/values/$APPNAME.yaml` doit être le suivant (en adaptant les permissions selon les environnements de l'application) :
 ```yaml
 argo-cd:
