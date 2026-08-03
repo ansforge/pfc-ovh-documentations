@@ -101,7 +101,8 @@ La configuration des rôles et des permissions Keycloak pour pouvoir se connecte
            - $APPNAME-developer
 ```
 - Dans le fichier https://github.com/ansforge/pfc-ovh-argocd-config-infrastructure/blob/main/components/operationnel/keycloak-config/outils/values/clients.yaml, ajouter `$APPNAME-devops` dans la liste des roles du client vault
-- Dans le fichier https://github.com/ansforge/pfc-ovh-argocd-config-infrastructure/blob/main/components/operationnel/argo-cd/outils/values.yaml, ajouter une entrée de `appsetOptions / additioalValuesFiles` pour un nouveau fichier avec comme nom `$APPNAME.yaml`. Créer le fichier `components/operationnel/argo-cd/outils/values/$APPNAME.yaml` doit être le suivant (en adaptant les permissions selon les environnements de l'application) :
+- Dans le fichier https://github.com/ansforge/pfc-ovh-argocd-config-infrastructure/blob/main/components/operationnel/argo-cd/outils/values.yaml, ajouter une entrée de `appsetOptions / additioalValuesFiles` pour un nouveau fichier avec comme nom `$APPNAME.yaml`.
+- Créer le fichier `components/operationnel/argo-cd/outils/values/$APPNAME.yaml`, qui doit être le suivant (en adaptant les permissions selon les environnements de l'application) :
 ```yaml
 argo-cd:
   configs:
