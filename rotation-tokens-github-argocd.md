@@ -18,7 +18,6 @@ Le scope du token lui permet de lire le repo github sans aucun droit d'écriture
 2. Changer le token dans les Vault (champ "token"):
    - 3AZ: https://vault.pfccloud.esante.gouv.fr/ui/vault/secrets/outils-devops/kv/argocd-config-infra-github-credentials
    - 1AZ: https://vault.pfccloudovh.esante.gouv.fr/ui/vault/secrets/forge-tools/kv/argocd-config-infra-github-credentials/details
-   - 1AZ test: https://vault.test.pfccloudovh.esante.gouv.fr/ui/vault/secrets/forge-tools/kv/argocd-config-infra-github-credentials
 3. Attendre (environ 3 minutes) pour que externalsecrets+argocd voient le changement de token
 4. Vérifier que le token marche bien en connectant un repo dans la console argocd: https://argocd.pfccloud.esante.gouv.fr/settings/repos?addRepo=true (via https, ne pas spécifier de credentials pour qu'il utilise bien le template)
 5. Mettre à jour la date d'expiration dans le document Excel https://esantegouv.sharepoint.com/:x:/r/sites/GED-Calypso/espace-projets/_layouts/15/doc2.aspx?sourcedoc=%7B072F03DE-4526-43A3-8D69-A9C2D6B58293%7D&file=SuiviJetonVault.xlsx&action=default&mobileredirect=true
